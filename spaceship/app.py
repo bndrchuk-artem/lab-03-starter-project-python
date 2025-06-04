@@ -10,7 +10,7 @@ def make_app(settings: Settings) -> FastAPI:
     app = FastAPI(
         debug=settings.debug,
         title=settings.app_title,
-        description=settings.app_description,
+        description=f"{settings.app_description} - створено Артем Бондарчук",
         version=settings.app_version,
     )
     app.state.settings = settings
