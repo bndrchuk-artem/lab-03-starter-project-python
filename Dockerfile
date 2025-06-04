@@ -1,24 +1,16 @@
-FROM python:3.11-alpine
+FROM python:3.11-bullseye
 
+# Встановлюємо робочу директорію
 WORKDIR /app
 
-# Встановлюємо системні залежності для numpy
-RUN apk add --no-cache \
-    gcc \
-    musl-dev \
-    gfortran \
-    openblas-dev \
-    lapack-dev
-
-# Копіюємо та встановлюємо Python залежності
+# Спочатку копіюємо та встановлюємо залежності (шар, що змінюється рідко)
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Видаляємо компілятори (залишаємо тільки runtime бібліотеки)
-RUN apk del gcc musl-dev gfortran
-
-# Копіюємо файли застосунку
+# Копіюємо статичні файли
 COPY build/ build/
+
+# Копіюємо код застосунку (шар, що змінюється часто)
 COPY spaceship/ spaceship/
 
 EXPOSE 8000
